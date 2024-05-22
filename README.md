@@ -34,7 +34,6 @@ Successful Request with Humidity Data:
 This request demonstrates a successful weather data retrieval with humidity data included.
 It validates that the response contains humidity information.
 
-
 POST Request:
 New Request:
 This request creates a new weather entry for a specified city.
@@ -48,5 +47,6 @@ It includes a sample request body with updated weather data fields.
 
 
 2. Manual Testing 
-Writen detailed Test cases for all features for mobile apps that can cover Edge cases and negative scenarios.
-*Test Scenarios for Online Doctor Appointment and Consultation Mobile App.xlsx.pdf*
+Wrote detailed Test cases for all features of mobile apps that can cover Edge cases and negative scenarios.
+
+- *Test Scenarios for Online Doctor Appointment and Consultation Mobile App.xlsx.pdf*
