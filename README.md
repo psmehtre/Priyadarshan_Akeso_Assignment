@@ -1,6 +1,6 @@
 # Priyadarshan_Akeso_Assignment-
 
-**POSTMAN Collection is exported in JSON Format **
+* POSTMAN Collection is exported in JSON Format *
 1. Backend API Testing - 
 
 Introduction:
