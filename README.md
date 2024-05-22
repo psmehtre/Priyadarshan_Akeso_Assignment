@@ -1,8 +1,8 @@
 # Priyadarshan_Akeso_Assignment-
 
-Technical Assignment: QA/QC Engineer
+**POSTMAN Collection is exported in JSON Format **
+1. Backend API Testing - 
 
-1. Backend API Testing -
 Introduction:
 The Postman Collection provided contains a set of API requests for interacting with the OpenWeather API. These requests cover various scenarios for retrieving weather data and performing operations such as creating new weather entries and updating existing ones.
 GET Requests:
