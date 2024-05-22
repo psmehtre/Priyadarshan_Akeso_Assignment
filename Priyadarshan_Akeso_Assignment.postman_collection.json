@@ -1,0 +1,689 @@
+{
+	"info": {
+		"_postman_id": "2282c24a-adb4-4353-9e0d-b24d71f51d47",
+		"name": "Priyadarshan_Akeso_Assignment",
+		"description": "Technical Assignment: QA/QC Engineer\n\n**Introduction:**  \nThe Postman Collection provided contains a set of API requests for interacting with the OpenWeather API. These requests cover various scenarios for retrieving weather data and performing operations such as creating new weather entries and updating existing ones.\n\n**GET Requests:**\n\n1. **Get Current Weather:**\n    - This request retrieves the current weather data for a specified city.\n    - It validates that the response contains the expected data fields such as temperature, humidity, and weather conditions.\n2. **Invalid API Key:**\n    - This request tests the scenario where an invalid API key is provided.\n    - It verifies that the API returns a 401 status code along with an appropriate error message.\n3. **Missing City Name:**\n    - This request tests the scenario where the city name parameter is missing.\n    - It validates that the API returns a 400 status code with an error message indicating the missing parameter.\n4. **Boundary Test: Temperature Check for a Specific City:**\n    - This request checks the temperature range for a specific city (Siberia).\n    - It ensures that the temperature value falls within the expected range.\n5. **Successful Request with Celsius Units:**\n    - This request demonstrates a successful weather data retrieval with units specified as Celsius.\n    - It verifies that the response includes temperature data in Celsius units.\n6. **Successful Request with Fahrenheit Units:**\n    - This request demonstrates a successful weather data retrieval with units specified as Fahrenheit.\n    - It verifies that the response includes temperature data in Fahrenheit units.\n7. **Successful Request with Humidity Data:**\n    - This request demonstrates a successful weather data retrieval with humidity data included.\n    - It validates that the response contains humidity information.\n\n**POST Request:**\n\n1. **New Request:**\n    - This request creates a new weather entry for a specified city.\n    - It includes a sample request body with the necessary data fields.\n\n**PATCH Request:**\n\n1. **Update City Weather Entry:**\n    \n    - This request updates an existing weather entry for a specific city.\n    - It includes a sample request body with updated weather data fields.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24924193"
+	},
+	"item": [
+		{
+			"name": "Get Current Weather",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"city\", \"London\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Response has city name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"London\");",
+							"});",
+							"",
+							"pm.test(\"Temperature is a number\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?q={{city}}&appid={{apiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid API Key",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables with an invalid API key",
+							"pm.environment.set(\"city\", \"London\");",
+							"pm.environment.set(\"apiKey\", \"INVALID_API_KEY\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Invalid API key. Please see https://openweathermap.org/faq#error401 for more info.\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?q={{city}}&appid={{apiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Missing City Name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables without a city name",
+							"pm.environment.unset(\"city\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Nothing to geocode\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?appid={{apiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boundary Test: Temperature Check for a Specific City",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"city\", \"Siberia\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Temperature is within expected range\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.within(-100, 300);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?q={{city}}&appid={{apiKey}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successful Request with Celsius Units",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"city\", \"Paris\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							"pm.environment.set(\"units\", \"metric\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has city name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Paris\");",
+							"});",
+							"",
+							"pm.test(\"Temperature is in Celsius\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"    pm.expect(jsonData.main.temp).to.be.at.least(-50).and.at.most(50); // Celsius temperature range",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/weather?q={{city}}&units={{units}}&appid={{apiKey}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "units",
+							"value": "{{units}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successful Request with Fahrenheit Units",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"city\", \"New York\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							"pm.environment.set(\"units\", \"imperial\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has city name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"New York\");",
+							"});",
+							"",
+							"pm.test(\"Temperature is in Fahrenheit\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"    pm.expect(jsonData.main.temp).to.be.at.least(-58).and.at.most(122); // Fahrenheit temperature range",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/weather?q={{city}}&units={{units}}&appid={{apiKey}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "units",
+							"value": "{{units}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successful Request with Humidity Data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"city\", \"Tokyo\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has city name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Tokyo\");",
+							"});",
+							"",
+							"pm.test(\"Humidity data is present\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.humidity).to.be.a(\"number\");",
+							"    pm.expect(jsonData.main.humidity).to.be.within(0, 100); // Humidity percentage range",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/weather?q={{city}}&appid={{apiKey}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"pm.environment.set(\"cityName\", \"Sydney\");",
+							"pm.environment.set(\"cityLatitude\", -33.865143);",
+							"pm.environment.set(\"cityLongitude\", 151.209900);",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has city name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"cityName\"));",
+							"});",
+							"",
+							"pm.test(\"New city entry created successfully\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//This was Post request but unable to fetch the Patch request as has limited access to the API token for my account\n\n{\n    \"name\": \"{{cityName}}\",\n    \"latitude\": {{cityLatitude}},\n    \"longitude\": {{cityLongitude}},\n    \"temperature\": 20,\n    \"humidity\": 70\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/weather?q={{cityName}}&lat={{cityLatitude}}&lon={{cityLongitude}}&appid={{apiKey}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{cityName}}"
+						},
+						{
+							"key": "lat",
+							"value": "{{cityLatitude}}"
+						},
+						{
+							"key": "lon",
+							"value": "{{cityLongitude}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Request - Update City Weather Entry",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pre-request script to set environment variables",
+							"// Set environment variables for the request",
+							"pm.environment.set(\"city\", \"London\");",
+							"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// TO Parse the response JSON data",
+							"var jsonData = pm.response.json();",
+							"",
+							"",
+							"// Ensure that the response body contains the expected fields",
+							"pm.test(\"Response body has required fields\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"coord\");",
+							"    pm.expect(jsonData).to.have.property(\"weather\");",
+							"    pm.expect(jsonData).to.have.property(\"main\");",
+							"    pm.expect(jsonData).to.have.property(\"visibility\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//This was Patch request but unable to fetch the Patch request as has limited access to the API token for my account\n// {\n//     \"description\": \"New weather description\"\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/weather?q={{city}}&appid={{apiKey}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{city}}"
+						},
+						{
+							"key": "appid",
+							"value": "{{apiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.environment.set(\"apiKey\", \"cf44a5e31f78df7c33dc68255e10c2f9\");",
+					"pm.environment.set(\"baseURL\", \"https://api.openweathermap.org/data/2.5\");",
+					"pm.environment.set(\"city\", \"London\");",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "city",
+			"value": "city"
+		},
+		{
+			"key": "London",
+			"value": "city"
+		}
+	]
+}
